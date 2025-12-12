@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0df07b75dcac808458a4cfd1e74cc6e6, type: 3}
+  m_Name: GB_SentencesDatabase
+  m_EditorClassIdentifier: 
+  speakerName: Olivier
+  sentenceDatas:
+  - ID: GB_1
+    label: Au revoir
+  - ID: GB_2
+    label: A plus
+  - ID: GB_3
+    label: "Bonne soir\xE9e"
