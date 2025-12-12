@@ -4,15 +4,15 @@ using System.Collections;
 
 public class Roulette : MonoBehaviour
 {
-    public Transform visuals;         
-    public TMP_Text numberText;    
-    public float spinDuration = 2f;   
-    public float initialSpeed = 720f; 
-    public int extraFullSpins = 3; 
-    public Animator animator;
+    [SerializeField] private Transform visuals;         
+    [SerializeField] private TMP_Text numberText;    
+    [SerializeField] private float spinDuration = 2f;   
+    [SerializeField] private float initialSpeed = 720f; 
+    [SerializeField] private int extraFullSpins = 3; 
+    [SerializeField] private Animator animator;
    
 
-    public int[] sliceNumbers = new int[] {
+    [SerializeField] private int[] sliceNumbers = new int[] {
         0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,
         24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26
     };
@@ -24,9 +24,9 @@ public class Roulette : MonoBehaviour
         false, true, false, true, false, true, false
     };
 
-    public Color redColor = Color.red;
-    public Color blackColor = Color.black;
-    public Color greenColor = Color.green;
+    [SerializeField] private Color redColor = Color.red;
+    [SerializeField] private Color blackColor = Color.black;
+    [SerializeField] private Color greenColor = Color.green;
 
     private bool spinning = false;
 
