@@ -24,7 +24,7 @@ public class GameSystem
     private int betAmount = 0;
     public int BetAmount => betAmount;
 
-    private int chosenNumber = -1;     // choix du joueur
+    private int chosenNumber = 32;     // choix du joueur
     public int ChosenNumber => chosenNumber;
 
 
@@ -68,18 +68,18 @@ public class GameSystem
     }
 
     //
-    public void StartSpin(Func<int> rouletteStartFunction)
-    {
-        // Appelé par roulette / bouton spin
-        if (_currentGameState != GAME_STATE.GAMBLE)
-            return;
+    //public void StartSpin(Func<int> rouletteStartFunction)
+    //{
+    //    // Appele par roulette / bouton spin
+    //    if (_currentGameState != GAME_STATE.GAMBLE)
+    //        return;
 
-        OnChangeState(GAME_STATE.SPINNING);
+    //    OnChangeState(GAME_STATE.SPINNING);
 
-        // Lancer la roulette et recuperer le resultat via callback
-        int result = rouletteStartFunction.Invoke();
-        OnRouletteStopped(result);
-    }
+    //    // Lancer la roulette et recuperer le resultat via callback
+    //    int result = rouletteStartFunction.Invoke();
+    //    OnRouletteStopped(result);
+    //}
 
     public void OnRouletteStopped(int winningNumber)
     {
@@ -89,11 +89,13 @@ public class GameSystem
 
         if (chosenNumber == winningNumber)
         {
-            Win();
+            Debug.Log("GAGNE");
+            //Win();
         }
         else
         {
-            Lose();
+            Debug.Log("Perdu");
+            //Lose();
         }
     }
 
