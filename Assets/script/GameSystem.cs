@@ -44,6 +44,7 @@ public class GameSystem
         OnStateChanged?.Invoke(newState);
     }
 
+    //permet de placer son parie sur un numéro
     public bool PlaceBet(int number, int amount)
     {
         if (_currentGameState != GAME_STATE.GAMBLE)
@@ -66,6 +67,7 @@ public class GameSystem
         return true;
     }
 
+    //
     public void StartSpin(Func<int> rouletteStartFunction)
     {
         // Appelé par roulette / bouton spin
