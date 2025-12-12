@@ -70,7 +70,7 @@ public class Roulette : MonoBehaviour
         {
             visuals.Rotate(0f, 0f, speed * Time.deltaTime); 
             elapsed += Time.deltaTime;
-            speed = Mathf.Lerp(initialSpeed, 60f, elapsed / spinDuration);
+            //speed = Mathf.Lerp(initialSpeed, 60f, elapsed / spinDuration);
             yield return null;
         }
 
@@ -81,11 +81,27 @@ public class Roulette : MonoBehaviour
         float targetSliceAngle = chosenIndex * sliceAngle; 
         float currentZ = visuals.localEulerAngles.z;
         float currentContinuous = currentZ;
-        float finalAngle = currentContinuous + extraFullSpins * 360f + Mathf.DeltaAngle(currentContinuous, targetSliceAngle);
+        float finalAngle = currentContinuous + Mathf.DeltaAngle(currentContinuous, targetSliceAngle);
 
         float t = 0f;
         float smoothTime = 1.0f; 
         float startAngle = currentContinuous;
+
+        Debug.Log(startAngle + " and " + finalAngle);
+
+        if ((startAngle > finalAngle))
+        {
+            float timer = 0f;
+            while (timer < smoothTime)
+            {
+                float newZ = Mathf.LerpAngle(startAngle, startAngle + 179, timer / smoothTime);
+                visuals.localEulerAngles = new Vector3(visuals.localEulerAngles.x, visuals.localEulerAngles.y, newZ);
+                timer += Time.deltaTime;
+                yield return null;
+            }
+            startAngle = visuals.localEulerAngles.z;
+        }
+
         while (t < smoothTime)
         {
             float newZ = Mathf.LerpAngle(startAngle, finalAngle, t / smoothTime);
@@ -93,6 +109,7 @@ public class Roulette : MonoBehaviour
             t += Time.deltaTime;
             yield return null;
         }
+
         visuals.localEulerAngles = new Vector3(visuals.localEulerAngles.x, visuals.localEulerAngles.y, finalAngle);
 
         if (numberText != null)
