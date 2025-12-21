@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Argent du joueur")]
     public int playerMoney = 1000;
+    [SerializeField] private TextMeshProUGUI moneyDisplay;
 
     void Awake()
     {
@@ -52,24 +53,33 @@ public class GameManager : MonoBehaviour
         if (choosenColor.value == 0)
         {
             Debug.Log("BLACK");
+            OnChangeColor(COLORS.BLACK);
         }
         else if (choosenColor.value == 1)
         {
             Debug.Log("RED");
+            OnChangeColor(COLORS.RED);
         }
         else
         {
             Debug.Log("GREEN");
+            OnChangeColor(COLORS.GREEN);
         }
     }
 
-    void PlaceColor()
+    public int GrabInputFieldValue(TMP_InputField field)
     {
+        if(field.text == null || !int.TryParse(field.text, out betAmount))
+        {
+            return 0;
+        }
 
+        return int.Parse(field.text);
     }
 
+
     //permet de placer son parie sur un numéro
-    public bool PlaceBet(int number, int amount)
+    public bool PlaceBet()
     {
         if (GameSystem.CurrentGameState != GAME_STATE.GAMBLE)
         {
@@ -77,17 +87,17 @@ public class GameManager : MonoBehaviour
             return false;
         }
 
-        if (amount > playerMoney)
+        if (GrabInputFieldValue(betMoneyAmount) > playerMoney)
         {
             Debug.LogWarning("Pas assez d'argent !");
             return false;
         }
 
-        chosenNumber = number;
-        betAmount = amount;
-        playerMoney -= amount;
+        chosenNumber = GrabInputFieldValue(betNumber);
+        betAmount = GrabInputFieldValue(betMoneyAmount);
+        playerMoney -= GrabInputFieldValue(betMoneyAmount);
 
-        Debug.Log($"BET: numero {number}, mise de {amount}");
+        Debug.Log($"BET: numero {GrabInputFieldValue(betNumber)}, mise de {GrabInputFieldValue(betMoneyAmount)}");
         return true;
     }
 
