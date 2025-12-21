@@ -1,23 +1,22 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
-using UnityEngine.UI;
 using static GameSystem;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    [Header("Pari")]
-    [SerializeField] private int betAmount = 0;
-
+    [Header("Nombre Parié")]
+    [SerializeField] private TMP_InputField inputFieldBetNumber;
     [SerializeField] private int chosenNumber = 32;     // choix du joueur
-
-
     [SerializeField] private int lastWinningNumber = -1;
 
-    [SerializeField] private TMP_InputField betNumber;
-    [SerializeField] private TMP_InputField betMoneyAmount;
+
+    [Header("Argent Parié")]
+    [SerializeField] private TMP_InputField inputFieldAmount;
+    [SerializeField] private int betAmount = 0;
+
+    [Header("Couleur Pariée")]
     [SerializeField] private TMP_Dropdown choosenColor;
 
 
@@ -25,6 +24,7 @@ public class GameManager : MonoBehaviour
     public int playerMoney = 1000;
     [SerializeField] private TextMeshProUGUI moneyDisplay;
 
+    //Instancier le script
     void Awake()
     {
         if (Instance == null)
@@ -36,18 +36,13 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
-        
+        UpdateMoney(playerMoney);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    //Modifie la couleur pariée avec des states enum
     public void PrintColor()
     {
         if (choosenColor.value == 0)
@@ -67,15 +62,48 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public int GrabInputFieldValue(TMP_InputField field)
+    //Fonction qui permet de retourner la valeur d'un input field
+    private int GrabInputFieldValue(TMP_InputField field)
     {
-        if(field.text == null || !int.TryParse(field.text, out betAmount))
+        if(field.text == "" || !int.TryParse(field.text, out betAmount))
         {
             return 0;
         }
 
         return int.Parse(field.text);
     }
+
+    //Fonction qui gère les exceptions de l'input field qui gère le nombre sur lequel on parie
+    public void InputFieldExceptionBetNumber()
+    {
+        if (GrabInputFieldValue(inputFieldBetNumber) < 0)
+        {
+            inputFieldBetNumber.text = "0";
+        }
+        else if (GrabInputFieldValue(inputFieldBetNumber) > 36) // A MODIFIER SELON LA VALEUR MAX QU'ON AUTORISE
+        {
+            inputFieldBetNumber.text = "36";
+        }
+    }
+    //Fonction qui gère les exceptions de l'input field qui gère la somme d'argent pariée
+    public void InputFieldExceptionBetAmount()
+    {
+        if (GrabInputFieldValue(inputFieldAmount) <= 0)
+        {
+            inputFieldAmount.text = "1";
+        }
+        else if (GrabInputFieldValue(inputFieldAmount) > playerMoney)
+        {
+            inputFieldAmount.text = "" + playerMoney;
+        }
+    }
+
+    //Modifie le text de l'argent
+    public void  UpdateMoney(int money)
+    {
+        moneyDisplay.text = "" + money;
+    }
+
 
 
     //permet de placer son parie sur un numéro
@@ -87,17 +115,18 @@ public class GameManager : MonoBehaviour
             return false;
         }
 
-        if (GrabInputFieldValue(betMoneyAmount) > playerMoney)
+        if (GrabInputFieldValue(inputFieldAmount) > playerMoney)
         {
             Debug.LogWarning("Pas assez d'argent !");
             return false;
         }
 
-        chosenNumber = GrabInputFieldValue(betNumber);
-        betAmount = GrabInputFieldValue(betMoneyAmount);
-        playerMoney -= GrabInputFieldValue(betMoneyAmount);
+        chosenNumber = GrabInputFieldValue(inputFieldBetNumber);
+        betAmount = GrabInputFieldValue(inputFieldAmount);
+        playerMoney -= betAmount;
+        UpdateMoney(playerMoney);
 
-        Debug.Log($"BET: numero {GrabInputFieldValue(betNumber)}, mise de {GrabInputFieldValue(betMoneyAmount)}");
+        Debug.Log($"BET: numero {GrabInputFieldValue(inputFieldBetNumber)}, mise de {GrabInputFieldValue(inputFieldAmount)}");
         return true;
     }
 
