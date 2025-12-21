@@ -5,7 +5,9 @@ using System.Collections;
 public class Roulette : MonoBehaviour
 {
     [SerializeField] private Transform visuals;         
-    [SerializeField] private TMP_Text numberText;    
+    [SerializeField] private TMP_Text numberText;
+    [SerializeField] private TMP_Text numberTextAfter;
+    [SerializeField] private TMP_Text numberTextPrior;
     [SerializeField] private float spinDuration = 2f;   
     [SerializeField] private float initialSpeed = 720f; 
     [SerializeField] private int extraFullSpins = 3; 
@@ -125,6 +127,31 @@ public class Roulette : MonoBehaviour
             
             numberText.gameObject.SetActive(true); 
         }
+
+        if (numberTextAfter != null)
+        {
+            var indexAfter = chosenIndex + 1;
+            if (indexAfter >= sliceNumbers.Length)
+            {
+                indexAfter = 0;
+            }
+            var numberAfter = (sliceNumbers != null && sliceNumbers.Length > 0) ? sliceNumbers[indexAfter] : Random.Range(1, 37);
+
+            numberTextAfter.text = numberAfter.ToString();
+        }
+
+        if (numberTextPrior != null)
+        {
+            var indexPrior = chosenIndex - 1;
+            if (indexPrior < 0)
+            {
+                indexPrior = sliceNumbers.Length - 1;
+            }
+            var numberPrior = (sliceNumbers != null && sliceNumbers.Length > 0) ? sliceNumbers[indexPrior] : Random.Range(1, 37);
+
+            numberTextPrior.text = numberPrior.ToString();
+        }
+
         else Debug.LogWarning("numberText non assigné : impossible d'afficher le chiffre.");
 
         spinning = false;
