@@ -36,19 +36,23 @@ public class Roulette : MonoBehaviour
     {
         GetComponents<Animator>();
         if (numberText != null)
-            numberText.gameObject.SetActive(false); 
+        {
+            numberText.gameObject.SetActive(false);
+            numberTextAfter.gameObject.SetActive(false);
+            numberTextPrior.gameObject.SetActive(false);
+        }
     }
 
-    void Update()
-    {
-
-    }
     public void StartRolling()
     {
         numberText.gameObject.SetActive(false);
+        numberTextAfter.gameObject.SetActive(false);
+        numberTextPrior.gameObject.SetActive(false);
         animator.SetBool("spinner", true);
         if (!spinning)
+        {
             StartCoroutine(SpinAndStop());
+        }
     }
 
     IEnumerator RollingDelay(float delay)
@@ -138,6 +142,7 @@ public class Roulette : MonoBehaviour
             var numberAfter = (sliceNumbers != null && sliceNumbers.Length > 0) ? sliceNumbers[indexAfter] : Random.Range(1, 37);
 
             numberTextAfter.text = numberAfter.ToString();
+            numberTextAfter.gameObject.SetActive(true);
         }
 
         if (numberTextPrior != null)
@@ -150,6 +155,7 @@ public class Roulette : MonoBehaviour
             var numberPrior = (sliceNumbers != null && sliceNumbers.Length > 0) ? sliceNumbers[indexPrior] : Random.Range(1, 37);
 
             numberTextPrior.text = numberPrior.ToString();
+            numberTextPrior.gameObject.SetActive(true);
         }
 
         else Debug.LogWarning("numberText non assigné : impossible d'afficher le chiffre.");
