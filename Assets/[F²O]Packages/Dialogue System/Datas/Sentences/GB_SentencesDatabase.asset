@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0df07b75dcac808458a4cfd1e74cc6e6, type: 3}
   m_Name: GB_SentencesDatabase
   m_EditorClassIdentifier: 
-  speakerName: Olivier
   sentenceDatas:
-  - ID: GB_1
-    label: Au revoir
-  - ID: GB_2
-    label: A plus
-  - ID: GB_3
-    label: "Bonne soir\xE9e"
+  - label: Au revoir
+    ID: GB_1
+  - label: A plus
+    ID: GB_2
+  - label: "Bonne soir\xE9e"
+    ID: GB_3
