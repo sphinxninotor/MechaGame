@@ -39,6 +39,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        choosenColor.captionText.color = Color.white;
+        choosenColor.image.color = Color.black;
+        OnChangeColor(COLORS.BLACK);
         UpdateMoney(playerMoney);
     }
 
@@ -48,16 +51,22 @@ public class GameManager : MonoBehaviour
         if (choosenColor.value == 0)
         {
             Debug.Log("BLACK");
+            choosenColor.captionText.color = Color.white;
+            choosenColor.image.color = Color.black;
             OnChangeColor(COLORS.BLACK);
         }
         else if (choosenColor.value == 1)
         {
             Debug.Log("RED");
+            choosenColor.captionText.color = Color.white;
+            choosenColor.image.color = Color.red;
             OnChangeColor(COLORS.RED);
         }
         else
         {
             Debug.Log("GREEN");
+            choosenColor.captionText.color = Color.white;
+            choosenColor.image.color = Color.green;
             OnChangeColor(COLORS.GREEN);
         }
     }
@@ -101,7 +110,7 @@ public class GameManager : MonoBehaviour
     //Modifie le text de l'argent
     public void  UpdateMoney(int money)
     {
-        moneyDisplay.text = "" + money;
+        moneyDisplay.text = "" + money + "$";
     }
 
 
