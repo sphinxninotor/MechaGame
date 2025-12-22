@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Couleur Pariée")]
     [SerializeField] private TMP_Dropdown choosenColor;
+    private Color playerColor;
 
 
     [Header("Argent du joueur")]
@@ -42,6 +43,7 @@ public class GameManager : MonoBehaviour
         choosenColor.captionText.color = Color.white;
         choosenColor.image.color = Color.black;
         OnChangeColor(COLORS.BLACK);
+        playerColor = choosenColor.image.color;
         UpdateMoney(playerMoney);
     }
 
@@ -69,6 +71,7 @@ public class GameManager : MonoBehaviour
             choosenColor.image.color = Color.green;
             OnChangeColor(COLORS.GREEN);
         }
+        playerColor = choosenColor.image.color;
     }
 
     //Fonction qui permet de retourner la valeur d'un input field
@@ -116,18 +119,16 @@ public class GameManager : MonoBehaviour
 
 
     //permet de placer son parie sur un numéro
-    public bool PlaceBet()
+    public void PlaceBet()
     {
         if (GameSystem.CurrentGameState != GAME_STATE.GAMBLE)
         {
             Debug.LogWarning("Impossible de parier maintenant");
-            return false;
         }
 
         if (GrabInputFieldValue(inputFieldAmount) > playerMoney)
         {
             Debug.LogWarning("Pas assez d'argent !");
-            return false;
         }
 
         chosenNumber = GrabInputFieldValue(inputFieldBetNumber);
@@ -136,19 +137,19 @@ public class GameManager : MonoBehaviour
         UpdateMoney(playerMoney);
 
         Debug.Log($"BET: numero {GrabInputFieldValue(inputFieldBetNumber)}, mise de {GrabInputFieldValue(inputFieldAmount)}");
-        return true;
     }
 
-    public void OnRouletteStopped(int winningNumber)
+    public void OnRouletteStopped(int leftNumber, int middleNumber, int rightNumber, COLORS color)
     {
-        lastWinningNumber = winningNumber;
+        lastWinningNumber = middleNumber;
 
-        Debug.Log("Resultat roulette : " + winningNumber);
+        Debug.Log("Resultat roulette : " + middleNumber);
 
-        if (chosenNumber == winningNumber)
+        if (chosenNumber == leftNumber || chosenNumber == middleNumber || chosenNumber == rightNumber || CurrentColor == color)
         {
             Debug.Log("GAGNE");
-            Win();
+            Win( leftNumber, middleNumber, rightNumber, color);
+            UpdateMoney(playerMoney);
         }
         else
         {
@@ -157,9 +158,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void Win()
+    private void Win(int leftNumber, int middleNumber, int rightNumber, COLORS color)
     {
-        int gain = betAmount * 36;   // roulette europeenne
+        int gain = betAmount;
+        if (chosenNumber == leftNumber || chosenNumber == rightNumber)
+        {
+            gain += 400;
+        }
+        else if (chosenNumber == middleNumber)
+        {
+            gain *= 7;
+        }
+        else if (CurrentColor == color && color == COLORS.GREEN)
+        {
+            gain *= 36;
+        }
+        else if (CurrentColor == color)
+        {
+            gain += 250;
+        }
         playerMoney += gain;
         Debug.Log("VICTOIRE ! +" + gain);
         //GameSystem.CurrentGameState = GameSystem.GAME_STATE.WIN;

@@ -1,9 +1,12 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using static GameSystem;
 
 public class Roulette : MonoBehaviour
 {
+    COLORS stateColor;
+
     [SerializeField] private Transform visuals;         
     [SerializeField] private TMP_Text numberText;
     [SerializeField] private TMP_Text numberTextAfter;
@@ -121,15 +124,24 @@ public class Roulette : MonoBehaviour
         if (numberText != null)
         {
             numberText.text = randomNumber.ToString();
-            
+
             if (randomNumber == 0)
+            {
                 numberText.color = greenColor;
+                stateColor = COLORS.GREEN;
+            }
             else if (chosenIndex < sliceColors.Length && sliceColors[chosenIndex])
+            {
                 numberText.color = redColor;
+                stateColor = COLORS.RED;
+            }
             else
+            {
                 numberText.color = blackColor;
-            
-            numberText.gameObject.SetActive(true); 
+                stateColor = COLORS.BLACK;
+            }
+
+            numberText.gameObject.SetActive(true);
         }
 
         if (numberTextAfter != null)
@@ -162,5 +174,7 @@ public class Roulette : MonoBehaviour
 
         spinning = false;
         animator.SetBool("spinner", false);
+
+        GameManager.Instance.OnRouletteStopped(int.Parse(numberTextAfter.text), randomNumber, int.Parse(numberTextPrior.text), stateColor);
     }
 }
