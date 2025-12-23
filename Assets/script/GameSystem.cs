@@ -12,7 +12,8 @@ public class GameSystem
         GAMBLE,     // le joueur choisit son pari
         SPINNING,   // roulette en cours
         WIN,
-        LOSE
+        LOSE,
+        GAME_OVER
     }
 
     private static GAME_STATE _currentGameState;

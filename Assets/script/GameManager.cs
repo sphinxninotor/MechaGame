@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        OnChangeState(GAME_STATE.INTRO);
         choosenColor.captionText.color = Color.white;
         choosenColor.image.color = Color.black;
         OnChangeColor(COLORS.BLACK);
@@ -121,20 +122,19 @@ public class GameManager : MonoBehaviour
     //permet de placer son parie sur un numéro
     public void PlaceBet()
     {
-        if (GameSystem.CurrentGameState != GAME_STATE.GAMBLE)
+        OnChangeState(GAME_STATE.GAMBLE);
+        if(playerMoney <= 0)
         {
-            Debug.LogWarning("Impossible de parier maintenant");
+            GameOver();
         }
-
-        if (GrabInputFieldValue(inputFieldAmount) > playerMoney)
+        else
         {
-            Debug.LogWarning("Pas assez d'argent !");
-        }
+            chosenNumber = GrabInputFieldValue(inputFieldBetNumber);
+            betAmount = GrabInputFieldValue(inputFieldAmount);
+            playerMoney -= betAmount;
 
-        chosenNumber = GrabInputFieldValue(inputFieldBetNumber);
-        betAmount = GrabInputFieldValue(inputFieldAmount);
-        playerMoney -= betAmount;
-        UpdateMoney(playerMoney);
+            UpdateMoney(playerMoney);
+        }
 
         Debug.Log($"BET: numero {GrabInputFieldValue(inputFieldBetNumber)}, mise de {GrabInputFieldValue(inputFieldAmount)}");
     }
@@ -194,5 +194,11 @@ public class GameManager : MonoBehaviour
         chosenNumber = -1;
         betAmount = 0;
         OnChangeState(GAME_STATE.GAMBLE);
+    }
+
+    private void GameOver()
+    {
+        OnChangeState(GAME_STATE.GAME_OVER);
+        Debug.Log("Plus d'argent, vous avez perdu");
     }
 }
