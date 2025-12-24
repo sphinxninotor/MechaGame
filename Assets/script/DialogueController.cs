@@ -20,6 +20,9 @@ public class DialogueController : MonoBehaviour
     [SerializeField] private GameObject _spriteParent;
     private List<Image> _images = new();
 
+    [Header("Roulette")]
+    [SerializeField] private Roulette roulette; // <-- Ajout de la référence
+
     DialogueConfig _diagConfig;
 
     private void Awake()
@@ -78,16 +81,25 @@ public class DialogueController : MonoBehaviour
 
             if (newgo.TryGetComponent<Button>(out var bt))
             {
+                var choiceData = DialogueManager.Instance.ChoicesDB.GetChoiceData(choice.IDChoice);
+
                 if (string.IsNullOrEmpty(choice.IDSentence))
+                {
                     bt.onClick.AddListener(() => gameObject.SetActive(false));
+                    // Si ce choix doit lancer la roulette
+                    if (choiceData.launchRoulette && roulette != null)
+                    {
+                        bt.onClick.AddListener(() => roulette.StartRolling());
+                    }
+                }
                 else
                 {
                     var diagData = _diagConfig.datas.Find(x => x.IDSentence == choice.IDSentence && x.IDSpeaker == choice.speaker);
                     bt.onClick.AddListener(() => InitDialog(diagData));
                 }
-            }
 
-            newgo.GetComponentInChildren<TMP_Text>().text = DialogueManager.Instance.ChoicesDB.GetChoiceData(choice.IDChoice).label;
+                newgo.GetComponentInChildren<TMP_Text>().text = choiceData.label;
+            }
         }
     }
     

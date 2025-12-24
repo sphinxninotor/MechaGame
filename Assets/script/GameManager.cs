@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static GameSystem;
 
 public class GameManager : MonoBehaviour
@@ -11,7 +12,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int chosenNumber = 32;     // choix du joueur
     [SerializeField] private int lastWinningNumber = -1;
 
-
     [Header("Argent Parié")]
     [SerializeField] private TMP_InputField inputFieldAmount;
     [SerializeField] private int betAmount = 0;
@@ -22,8 +22,13 @@ public class GameManager : MonoBehaviour
 
 
     [Header("Argent du joueur")]
-    public int playerMoney = 1000;
+    [SerializeField] private int playerMoney = 1000;
     [SerializeField] private TextMeshProUGUI moneyDisplay;
+
+    [Header("Game Over")]
+    [SerializeField] private GameObject gameOver;
+
+
 
     //Instancier le script
     void Awake()
@@ -40,6 +45,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        gameOver.SetActive(false);
         OnChangeState(GAME_STATE.INTRO);
         choosenColor.captionText.color = Color.white;
         choosenColor.image.color = Color.black;
@@ -78,7 +84,7 @@ public class GameManager : MonoBehaviour
     //Fonction qui permet de retourner la valeur d'un input field
     private int GrabInputFieldValue(TMP_InputField field)
     {
-        if(field.text == "" || !int.TryParse(field.text, out betAmount))
+        if (field.text == "" || !int.TryParse(field.text, out betAmount))
         {
             return 0;
         }
@@ -112,7 +118,7 @@ public class GameManager : MonoBehaviour
     }
 
     //Modifie le text de l'argent
-    public void  UpdateMoney(int money)
+    public void UpdateMoney(int money)
     {
         moneyDisplay.text = "" + money + "$";
     }
@@ -123,18 +129,23 @@ public class GameManager : MonoBehaviour
     public void PlaceBet()
     {
         OnChangeState(GAME_STATE.GAMBLE);
-        if(playerMoney <= 0)
-        {
-            GameOver();
-        }
-        else
-        {
-            chosenNumber = GrabInputFieldValue(inputFieldBetNumber);
-            betAmount = GrabInputFieldValue(inputFieldAmount);
-            playerMoney -= betAmount;
 
-            UpdateMoney(playerMoney);
+        chosenNumber = GrabInputFieldValue(inputFieldBetNumber);
+        betAmount = GrabInputFieldValue(inputFieldAmount);
+        if (chosenNumber == 0)
+        {
+            chosenNumber = 21;
+            inputFieldBetNumber.text = "21";
         }
+        if (betAmount == 0)
+        {
+            betAmount = 10;
+            inputFieldAmount.text = "10";
+        }
+        playerMoney -= betAmount;
+
+        UpdateMoney(playerMoney);
+        
 
         Debug.Log($"BET: numero {GrabInputFieldValue(inputFieldBetNumber)}, mise de {GrabInputFieldValue(inputFieldAmount)}");
     }
@@ -148,7 +159,7 @@ public class GameManager : MonoBehaviour
         if (chosenNumber == leftNumber || chosenNumber == middleNumber || chosenNumber == rightNumber || CurrentColor == color)
         {
             Debug.Log("GAGNE");
-            Win( leftNumber, middleNumber, rightNumber, color);
+            Win(leftNumber, middleNumber, rightNumber, color);
             UpdateMoney(playerMoney);
         }
         else
@@ -156,27 +167,36 @@ public class GameManager : MonoBehaviour
             Debug.Log("Perdu");
             Lose();
         }
+        CheckGameOver();
     }
 
     private void Win(int leftNumber, int middleNumber, int rightNumber, COLORS color)
     {
         int gain = betAmount;
-        if (chosenNumber == leftNumber || chosenNumber == rightNumber)
+        if ((CurrentColor == color && color == COLORS.GREEN) && (chosenNumber == middleNumber && middleNumber == 0))
         {
-            gain += 400;
+            gain *= 72;
         }
-        else if (chosenNumber == middleNumber)
-        {
-            gain *= 7;
-        }
-        else if (CurrentColor == color && color == COLORS.GREEN)
+        else if ((CurrentColor == color && color == COLORS.GREEN) || (chosenNumber == middleNumber && middleNumber == 0))
         {
             gain *= 36;
         }
-        else if (CurrentColor == color)
+        else
         {
-            gain += 250;
+            if (chosenNumber == leftNumber || chosenNumber == rightNumber)
+            {
+                gain += 400;
+            }
+            if (chosenNumber == middleNumber)
+            {
+                gain *= 7;
+            }
+            if (CurrentColor == color)
+            {
+                gain += 250;
+            }
         }
+
         playerMoney += gain;
         Debug.Log("VICTOIRE ! +" + gain);
         //GameSystem.CurrentGameState = GameSystem.GAME_STATE.WIN;
@@ -193,12 +213,17 @@ public class GameManager : MonoBehaviour
     {
         chosenNumber = -1;
         betAmount = 0;
-        OnChangeState(GAME_STATE.GAMBLE);
+        OnChangeState(GAME_STATE.INTRO);
     }
 
-    private void GameOver()
+
+    private void CheckGameOver()
     {
-        OnChangeState(GAME_STATE.GAME_OVER);
-        Debug.Log("Plus d'argent, vous avez perdu");
+        if (playerMoney <= 0)
+        {
+            OnChangeState(GAME_STATE.GAME_OVER);
+            gameOver.SetActive(true);
+            Debug.Log("Plus d'argent, vous avez perdu");
+        }
     }
 }

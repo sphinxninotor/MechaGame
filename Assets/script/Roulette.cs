@@ -48,6 +48,7 @@ public class Roulette : MonoBehaviour
 
     public void StartRolling()
     {
+        GameManager.Instance.PlaceBet();
         numberText.gameObject.SetActive(false);
         numberTextAfter.gameObject.SetActive(false);
         numberTextPrior.gameObject.SetActive(false);

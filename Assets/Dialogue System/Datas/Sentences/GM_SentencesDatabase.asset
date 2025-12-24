@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0df07b75dcac808458a4cfd1e74cc6e6, type: 3}
   m_Name: GM_SentencesDatabase
   m_EditorClassIdentifier: 
-  speakerName: Franck
   sentenceDatas:
-  - ID: GM_1
-    label: Bonjour
-  - ID: GM_2
-    label: Salut
-  - ID: GM_3
-    label: Hey
+  - label: "Est-ce que tu est s\xFBr de tes choix ?"
+    ID: GM_1
+  - label: Salut
+    ID: GM_2
+  - label: Hey
+    ID: GM_3

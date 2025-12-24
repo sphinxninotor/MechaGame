@@ -15,9 +15,13 @@ MonoBehaviour:
   choiceDatas:
   - ID: C_YES
     label: Oui
+    launchRoulette: 0
   - ID: C_NO
     label: Non
+    launchRoulette: 0
   - ID: C_MAYBE
     label: "Peut-\xEAtre"
+    launchRoulette: 0
   - ID: C_OK
     label: Ok
+    launchRoulette: 1

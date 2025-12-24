@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SpeakersDatabase
   m_EditorClassIdentifier: 
   speakersDatas:
-  - label: Franck
+  - label: Croupier
     ID: SPK_FRA
     states:
     - state: 0

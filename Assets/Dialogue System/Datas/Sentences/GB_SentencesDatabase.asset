@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GB_SentencesDatabase
   m_EditorClassIdentifier: 
   sentenceDatas:
-  - label: Au revoir
+  - label: Que la roue tourne !
     ID: GB_1
   - label: A plus
     ID: GB_2
