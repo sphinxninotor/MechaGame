@@ -13,7 +13,7 @@ public class Roulette : MonoBehaviour
     [SerializeField] private TMP_Text numberTextPrior;
     [SerializeField] private float spinDuration = 2f;   
     [SerializeField] private float initialSpeed = 720f; 
-    [SerializeField] private int extraFullSpins = 3; 
+
     [SerializeField] private Animator animator;
    
 
